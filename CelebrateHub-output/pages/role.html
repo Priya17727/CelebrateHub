@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Choose Your Role — CelebrateHub</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/auth.css">
+</head>
+<body>
+<div class="role-page">
+  <div class="role-logo">CelebrateHub</div>
+  <h2>How will you use<br>CelebrateHub?</h2>
+  <p class="role-sub">Select your role to personalize your experience</p>
+  <div id="role-alert"></div>
+  <div class="role-cards">
+    <div class="role-card" onclick="selectRole('user')">
+      <div class="role-icon">🎉</div>
+      <h3>I'm a Customer</h3>
+      <p>Browse nearby services, book vendors, manage your celebrations, and create unforgettable memories.</p>
+      <button class="role-btn">Continue as Customer</button>
+    </div>
+    <div class="role-card" onclick="selectRole('vendor')">
+      <div class="role-icon">💼</div>
+      <h3>I'm a Vendor</h3>
+      <p>List your event services, manage booking requests, grow your business and reach thousands of customers.</p>
+      <button class="role-btn">Continue as Vendor</button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/state.js"></script>
+<script>
+// Check login
+const savedUser = localStorage.getItem('ch_user');
+const savedToken = localStorage.getItem('ch_token');
+if (!savedUser || !savedToken) { location.href = 'login.html'; }
+else {
+  state.currentUser = JSON.parse(savedUser);
+  state.token = savedToken;
+}
+
+async function selectRole(role) {
+  const alertEl = document.getElementById('role-alert');
+  alertEl.innerHTML = '<div class="alert alert-info">⏳ Setting role...</div>';
+
+  // Call API to set role
+  await apiFetch('/auth/select-role', {
+    method: 'PUT',
+    body: JSON.stringify({ role })
+  });
+
+  // Update local user
+  state.currentUser.role = role;
+  localStorage.setItem('ch_user', JSON.stringify(state.currentUser));
+  localStorage.setItem('ch_role', role);
+
+  alertEl.innerHTML = '<div class="alert alert-success">✅ Redirecting...</div>';
+  setTimeout(() => {
+    location.href = role === 'user' ? 'user-dashboard.html' : 'vendor-dashboard.html';
+  }, 600);
+}
+</script>
+</body>
+</html>

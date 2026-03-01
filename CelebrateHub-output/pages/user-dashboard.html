@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — CelebrateHub</title>
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+
+<nav class="dashboard-navbar">
+  <div class="logo">Celebrate<span>Hub</span></div>
+  <div class="dash-nav-right">
+    <a onclick="switchTab('home')" id="nav-home" class="nav-active">🏠 <span>Home</span></a>
+    <a onclick="switchTab('bookings')" id="nav-bookings">📋 <span>My Bookings</span></a>
+    <a onclick="switchTab('wishlist')" id="nav-wishlist">❤️ <span>Wishlist</span></a>
+    <a onclick="switchTab('profile')" id="nav-profile">👤 <span>Profile</span></a>
+    <a class="btn-logout" onclick="doLogout()">⬅ Logout</a>
+  </div>
+</nav>
+
+<!-- TAB: HOME -->
+<div id="utab-home" class="tab-pane active">
+  <div class="user-hero">
+    <h2>Hi <span id="user-greeting">there</span>! 👋</h2>
+    <p>Discover amazing celebration services near you</p>
+  </div>
+  <div class="search-filter-bar">
+    <input class="search-input" id="service-search" placeholder="🔍  Search services, vendors, locations..." oninput="renderUserServices()">
+    <select class="filter-select" id="service-type-filter" onchange="renderUserServices()">
+      <option value="">All Categories</option>
+      <option>Catering</option><option>Photography</option><option>Decoration</option>
+      <option>Birthday Party</option><option>Venue</option><option>Makeup</option>
+      <option>Music & DJ</option><option>Entertainment</option><option>Transport</option>
+    </select>
+    <select class="filter-select" id="price-filter" onchange="renderUserServices()">
+      <option value="">Any Price</option>
+      <option value="low">Under ₹5,000</option>
+      <option value="mid">₹5,000 – ₹20,000</option>
+      <option value="high">Above ₹20,000</option>
+    </select>
+    <span class="results-count" id="results-count"></span>
+  </div>
+  <div class="listing-grid" id="services-listing"></div>
+</div>
+
+<!-- TAB: BOOKINGS -->
+<div id="utab-bookings" class="tab-pane" style="display:none;">
+  <div class="user-hero">
+    <h2>My Bookings 📋</h2>
+    <p>Manage, pay, rate and track all your bookings</p>
+  </div>
+  <div style="max-width:900px;margin:0 auto;padding:36px 40px;">
+    <div id="bookings-listing"></div>
+  </div>
+</div>
+
+<!-- TAB: WISHLIST -->
+<div id="utab-wishlist" class="tab-pane" style="display:none;">
+  <div class="user-hero">
+    <h2>My Wishlist ❤️</h2>
+    <p>Your saved services all in one place</p>
+  </div>
+  <div class="listing-grid" id="wishlist-listing"></div>
+</div>
+
+<!-- TAB: PROFILE -->
+<div id="utab-profile" class="tab-pane" style="display:none;">
+  <div class="user-hero">
+    <h2>My Profile 👤</h2>
+    <p>Your account details and booking summary</p>
+  </div>
+  <div class="profile-page-wrap">
+    <div class="profile-box">
+      <div class="profile-avatar">👤</div>
+      <h2 id="profile-name">User</h2>
+      <p class="profile-email" id="profile-email-h">email</p>
+      <div class="profile-detail"><span class="pd-label">Username</span><span class="pd-value" id="pd-username">—</span></div>
+      <div class="profile-detail"><span class="pd-label">Email</span><span class="pd-value" id="pd-email">—</span></div>
+      <div class="profile-detail"><span class="pd-label">Mobile</span><span class="pd-value" id="pd-mobile">—</span></div>
+      <div class="profile-detail"><span class="pd-label">Role</span><span class="pd-value" id="pd-role">Customer</span></div>
+      <div class="profile-detail"><span class="pd-label">Total Bookings</span><span class="pd-value" id="pd-bookings">0</span></div>
+      <div class="profile-bookings-mini">
+        <h3>Recent Bookings</h3>
+        <div id="profile-bookings-mini"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOK MODAL -->
+<div id="book-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('book-modal')">✕</button>
+    <h2>📅 Book Service</h2>
+    <div id="book-service-info" style="background:var(--surface);border-radius:var(--radius-sm);padding:16px;margin-bottom:20px;"></div>
+    <div id="book-alert"></div>
+    <div class="form-group"><label>Event Date *</label><input type="date" id="book-date"></div>
+    <div class="form-group"><label>Number of Guests *</label><input type="number" id="book-guests" placeholder="e.g. 50" min="1"></div>
+    <div class="form-group"><label>Special Requirements</label><textarea id="book-notes" placeholder="Any special requests..."></textarea></div>
+    <button class="btn-full" onclick="confirmBooking()">Confirm Booking ✓</button>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div id="payment-modal" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('payment-modal')">✕</button>
+    <h2>💳 Secure Payment</h2>
+    <div id="pay-booking-info" style="background:var(--surface);border-radius:var(--radius-sm);padding:16px;margin-bottom:20px;"></div>
+    <div id="pay-alert"></div>
+    <div class="form-group"><label>Card Number *</label><input type="text" id="pay-card" placeholder="1234 5678 9012 3456" maxlength="19"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Expiry *</label><input type="text" id="pay-expiry" placeholder="MM/YY" maxlength="5"></div>
+      <div class="form-group"><label>CVV *</label><input type="text" id="pay-cvv" placeholder="123" maxlength="3"></div>
+    </div>
+    <div class="form-group"><label>Name on Card *</label><input type="text" id="pay-name" placeholder="Your full name"></div>
+    <div style="background:#e8f5e9;border-radius:var(--radius-sm);padding:12px;margin-bottom:16px;font-size:0.85rem;color:#2e7d32;">
+      🔒 Your payment is secured with 256-bit SSL encryption
+    </div>
+    <button class="btn-full" onclick="completePayment()">Pay Now →</button>
+  </div>
+</div>
+
+<!-- RATING MODAL -->
+<div id="rating-modal" class="modal-overlay hidden">
+  <div class="modal" style="max-width:420px;text-align:center;">
+    <button class="modal-close" onclick="closeModal('rating-modal')">✕</button>
+    <h2>⭐ Rate Service</h2>
+    <p style="color:var(--muted);margin-bottom:6px;font-size:0.88rem;">How was your experience with</p>
+    <p style="font-weight:700;margin-bottom:24px;" id="rate-service-name"></p>
+    <div id="rate-alert"></div>
+    <div class="stars" style="justify-content:center;margin-bottom:16px;">
+      <div class="star" onmouseover="hoverStar(1)" onmouseout="hoverStar(_currentRatingValue)" onclick="clickStar(1)">★</div>
+      <div class="star" onmouseover="hoverStar(2)" onmouseout="hoverStar(_currentRatingValue)" onclick="clickStar(2)">★</div>
+      <div class="star" onmouseover="hoverStar(3)" onmouseout="hoverStar(_currentRatingValue)" onclick="clickStar(3)">★</div>
+      <div class="star" onmouseover="hoverStar(4)" onmouseout="hoverStar(_currentRatingValue)" onclick="clickStar(4)">★</div>
+      <div class="star" onmouseover="hoverStar(5)" onmouseout="hoverStar(_currentRatingValue)" onclick="clickStar(5)">★</div>
+    </div>
+    <textarea id="rate-review" placeholder="Write a short review (optional)..." style="width:100%;padding:10px;border:1px solid var(--border,#ddd);border-radius:8px;margin-bottom:16px;font-size:0.9rem;resize:vertical;min-height:70px;" rows="3"></textarea>
+    <button class="btn-full" onclick="submitRating()">Submit Rating</button>
+  </div>
+</div>
+
+<!-- PHOTOS MODAL -->
+<div id="photos-modal" class="modal-overlay hidden">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" onclick="closeModal('photos-modal')">✕</button>
+    <h2 id="photos-modal-title">Gallery</h2>
+    <div id="photos-gallery" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;"></div>
+    <div id="invite-card-content" style="background:linear-gradient(135deg,var(--deep),var(--deep2));border-radius:var(--radius-md);padding:28px;color:#fff;text-align:center;"></div>
+  </div>
+</div>
+
+<script src="../js/state.js"></script>
+<script src="../js/user.js"></script>
+<script src="../js/modals.js"></script>
+<script>
+// Auth guard
+const _token = localStorage.getItem('ch_token');
+const _user  = localStorage.getItem('ch_user');
+if (!_token || !_user) { location.href = 'login.html'; }
+state.token = _token;
+state.currentUser = JSON.parse(_user);
+
+// Set greeting
+const greetEl = document.getElementById('user-greeting');
+if (greetEl) greetEl.textContent = state.currentUser.username || 'there';
+
+// Load wishlist
+(async () => {
+  const wRes = await apiFetch('/users/wishlist');
+  if (wRes.ok) state.wishlist = (wRes.data.data || []).map(s => String(s._id));
+  renderUserServices();
+})();
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-pane').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+  const pane = document.getElementById('utab-' + tab);
+  if (pane) { pane.style.display = 'block'; pane.classList.add('active'); }
+  document.querySelectorAll('.dash-nav-right a[id]').forEach(a => a.classList.remove('nav-active'));
+  const navEl = document.getElementById('nav-' + tab);
+  if (navEl) navEl.classList.add('nav-active');
+  switch(tab) {
+    case 'home':     renderUserServices(); break;
+    case 'bookings': renderUserBookings(); break;
+    case 'wishlist': renderUserWishlist(); break;
+    case 'profile':  renderUserProfile();  break;
+  }
+}
+
+function doLogout() {
+  localStorage.removeItem('ch_token');
+  localStorage.removeItem('ch_user');
+  localStorage.removeItem('ch_role');
+  location.href = 'login.html';
+}
+</script>
+</body>
+</html>

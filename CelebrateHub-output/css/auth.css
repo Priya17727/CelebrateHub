@@ -1,0 +1,231 @@
+/* ============================================================
+   CelebrateHub - Auth Pages CSS
+   ============================================================ */
+
+/* ---- Auth Wrapper ---- */
+.auth-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--deep) 0%, var(--deep2) 55%, var(--deep3) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.auth-page::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 75% 25%, rgba(212,175,55,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 25% 75%, rgba(232,82,122,0.12) 0%, transparent 50%);
+  pointer-events: none;
+}
+.auth-page::after {
+  content: '🎉';
+  position: absolute;
+  font-size: 18rem;
+  opacity: 0.03;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* ---- Auth Box ---- */
+.auth-box {
+  background: rgba(255,255,255,0.98);
+  border-radius: var(--radius-lg);
+  padding: 52px 44px;
+  width: 100%;
+  max-width: 470px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.32);
+  animation: authIn 0.5s ease;
+}
+@keyframes authIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.auth-logo {
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 2rem;
+}
+.auth-box h2 {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 900;
+  margin-bottom: 6px;
+  color: var(--deep);
+}
+.auth-box .auth-subtitle {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin-bottom: 32px;
+}
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-soft);
+}
+.auth-switch {
+  text-align: center;
+  margin-top: 22px;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.auth-switch a {
+  color: var(--rose);
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+.auth-switch a:hover { text-decoration: underline; }
+
+/* OTP input group */
+.otp-group {
+  display: flex;
+  gap: 10px;
+}
+.otp-group input { flex: 1; }
+.btn-send-otp {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  border: none;
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  color: var(--deep);
+  font-size: 0.88rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-send-otp:hover { box-shadow: 0 4px 14px rgba(212,175,55,0.4); transform: translateY(-1px); }
+
+.back-link {
+  display: block;
+  text-align: center;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.back-link:hover { color: var(--text); }
+
+/* ---- ROLE SELECTION PAGE ---- */
+.role-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--deep) 0%, var(--deep2) 55%, var(--deep3) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 60px 40px;
+  position: relative;
+  overflow: hidden;
+}
+.role-page::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(212,175,55,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(232,82,122,0.12) 0%, transparent 50%);
+}
+.role-page .role-logo {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--gold), var(--rose));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  position: relative;
+}
+.role-page h2 {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 12px;
+  text-align: center;
+  position: relative;
+}
+.role-page .role-sub {
+  color: rgba(255,255,255,0.58);
+  margin-bottom: 52px;
+  text-align: center;
+  font-size: 1.05rem;
+  position: relative;
+}
+.role-cards {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+}
+.role-card {
+  background: rgba(255,255,255,0.97);
+  border-radius: 22px;
+  padding: 52px 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.35s;
+  width: 270px;
+  border: 3px solid transparent;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.18);
+  animation: authIn 0.5s ease both;
+}
+.role-card:first-child { animation-delay: 0.1s; }
+.role-card:last-child  { animation-delay: 0.2s; }
+.role-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--gold);
+  box-shadow: 0 24px 70px rgba(0,0,0,0.32);
+}
+.role-card .role-icon { font-size: 4.2rem; margin-bottom: 18px; }
+.role-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+  color: var(--deep);
+}
+.role-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+.role-card .role-btn {
+  margin-top: 22px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--deep);
+  border: none;
+  padding: 12px 28px;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transition: all 0.2s;
+}
+.role-card .role-btn:hover { box-shadow: 0 6px 20px rgba(212,175,55,0.45); }
+
+@media(max-width: 600px) {
+  .auth-box { padding: 36px 24px; }
+  .role-page h2 { font-size: 2rem; }
+  .role-card { width: 100%; max-width: 340px; padding: 40px 28px; }
+}
